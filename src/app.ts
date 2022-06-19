@@ -44,10 +44,10 @@ const main = async () => {
 };
 
 (async () => {
-    process.on('unhandledRejection', async (reason: Error) => {
-        // TODO: logging
-        process.exit(0);
-    });
+    // process.on('unhandledRejection', async (reason: Error) => {
+    //     // TODO: logging
+    //     process.exit(0);
+    // });
 
     process.on('unhandledRejection', error => {
         console.error('Unhandled promise rejection:', error);

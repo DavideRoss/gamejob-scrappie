@@ -15,7 +15,7 @@ export class NaughtyDogScraper extends BaseScraper {
     public async scrape(): Promise<Job[]> {
         let jobs: Job[] = [];
 
-        const response = await got('https://www.naughtydog.com/careers', {
+        const response = await got('https://www.naughtydog.com/openings', {
             https: { rejectUnauthorized: false }
         });
 
@@ -30,11 +30,11 @@ export class NaughtyDogScraper extends BaseScraper {
 
     private getSection($, dept: string): Job[] {
         const jobs: Job[] = [];
-        const deptEl = $(`.department a.d-block:contains(${dept})`).parent();
+        const deptEl = $(`.department div.name:contains(${dept})`).parent().parent().parent();
 
         deptEl.find('ul.jobs li').each((i, e) => {
-            const title = $(e).find('a.link-off-white').text().trim();
-            const link = $(e).find('a.link-off-white').attr('href') || '';
+            const title = $(e).find('.job-left .job-title').text().trim();
+            const link = 'https://www.naughtydog.com/' + $(e).find('a').attr('href') || '';
 
             jobs.push({
                 uuid: uuidv4(),

@@ -4,7 +4,7 @@ import { scrapers } from '../scrapers';
 
 // TODO: add logging
 
-export class ScrapersSanityCheck extends BaseOperation {
+export class ScrapersSanityCheckOperation extends BaseOperation {
     constructor() {
         super();
         this.handle = 'scrapers-sanity-check';

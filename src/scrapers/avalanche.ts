@@ -29,7 +29,7 @@ export class AvalancheScraper extends BaseScraper {
                 }
             });
 
-            const data = response.body as any;
+            const data = JSON.parse(response.body) as any;
 
             hits += data.data.length;
             totalHits = data.meta['record-count'];

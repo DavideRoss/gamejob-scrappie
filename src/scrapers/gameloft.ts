@@ -23,7 +23,7 @@ export class GameloftScraper extends BaseScraper {
             body: form
         });
 
-        const data: any = response.body;
+        const data: any = JSON.parse(response.body);
 
         for (const offering of data.details) {
             jobs.push({

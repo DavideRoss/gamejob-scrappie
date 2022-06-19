@@ -15,28 +15,21 @@ export class MediatonicScraper extends BaseScraper {
     public async scrape(): Promise<Job[]> {
         const jobs: Job[] = [];
 
-        const response = await got('https://www.mediatonicgames.com/careers');
-        const $ = cheerio.load(response.body);
+        const response = await got.get('https://mw-greenhouse-service-prod.debc.live.use1a.on.epicgames.com/api/job?limit=50&skip=0&page=1&company=Mediatonic&department=Art%20%26%20Animation&gh_src=1d0ec4e74us');
+        const data: any = JSON.parse(response.body);
 
-        const deptEl = $('.section-job-openings__category h2:contains(Art)').parent().eq(0);
-        const items = $(deptEl).find('.job-openings__list-item');
-
-        items.each((i, e) => {
-            const title = $(e).find('.job-opening__title').text().trim();
-            const link = $(e).find('.button').attr('href') || '';
-            const location = $(e).find('.job-opening__subtitle').text().trim().replace('Art - ', '');
-
+        for (const raw of data.hits) {
             jobs.push({
                 uuid: uuidv4(),
-                hash: createHash('md5').update($(e).html() || '', 'ascii').digest('hex'),
-                title,
-                link,
-                location,
+                hash: createHash('md5').update(raw.absolute_url, 'ascii').digest('hex'),
+                title: raw.title,
+                link: raw.absolute_url,
+                location: raw.location.name,
                 house: 'Mediatonic',
-                department: 'Art',
+                department: raw.department,
                 date: new Date()
             });
-        });
+        }
 
         return jobs;
     }

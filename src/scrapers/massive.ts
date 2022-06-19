@@ -26,7 +26,7 @@ export class MassiveScraper extends BaseScraper {
             body: form
         });
 
-        const data: any = response.body;
+        const data: any = JSON.parse(response.body);
 
         for (const offering of data.data.jobs)
         {
@@ -45,7 +45,7 @@ export class MassiveScraper extends BaseScraper {
                 link,
                 location,
                 house: 'Massive',
-                department: `${dept2} (${dept1})`,
+                department: `${dept2} (${dept1 || 'N.D.'})`,
                 date: new Date()
             });
         }

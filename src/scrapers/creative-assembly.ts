@@ -36,7 +36,7 @@ export class CreativeAssemblyScraper extends BaseScraper {
                 body: 'field_jobvite_category_new_target_id%5B%5D=240&field_jobvite_category_new_target_id%5B%5D=236&view_name=jobvite&view_display_id=page_1&view_args=&view_path=%2Fcareers&view_base_path=careers&view_dom_id=6638efd26a6f79b4228fb17424bd61f75e4c99206d1e41b4a5096c7873b455a3&pager_element=0&_drupal_ajax=1&ajax_page_state%5Btheme%5D=creative_assembly&ajax_page_state%5Btheme_token%5D=&ajax_page_state%5Blibraries%5D=classy%2Fbase%2Cclassy%2Fmessages%2Ccore%2Fhtml5shiv%2Ccore%2Fnormalize%2Ccreative_assembly%2Fglobal-css%2Ccreative_assembly%2Fglobal-js%2Csystem%2Fbase%2Cviews%2Fviews.ajax%2Cviews%2Fviews.module',
             } as any);
     
-            const data = response.body as any;
+            const data: any = JSON.parse(response.body);
             const jobsCommand = data.find(e => e.command === 'insert');
 
             const $ = cheerio.load(jobsCommand.data);

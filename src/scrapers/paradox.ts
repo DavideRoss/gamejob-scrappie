@@ -36,7 +36,7 @@ export class ParadoxScraper extends BaseScraper {
 
             if (departments.indexOf(dept) == -1) return;
 
-            const title = $(e).find('a span:first-of-type').text().trim();
+            const title = $(e).find('a span').eq(0).text().trim();
             const link = $(e).find('a').attr('href') || '';
 
             jobs.push({

@@ -20,13 +20,13 @@ export class ActivisionScraper extends BaseScraper {
         do {
             const response = await got.post('https://careers.activision.com/widgets', {
                 responseType: 'json',
-                json: {
+                body: JSON.stringify({
                     lang: 'en_us',
                     deviceType: 'desktop',
                     country: 'us',
                     pageName: 'search-results',
                     ddoKey: 'refineSearch',
-                    sortBy: '',
+                    sortBy: 'Most recent',
                     subsearch: '',
                     from: hits,
                     jobs: true,
@@ -44,17 +44,14 @@ export class ActivisionScraper extends BaseScraper {
                     isSliderEnable: false,
                     keywords: '',
                     global: true,
-                    selected_fields: {
-                        category: [
-                            'Art',
-                            'Animation',
-                            'VFX and Lighting'
-                        ]
-                    }
+                    selected_fields: {}
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
                 }
             });
 
-            const data: any = response.body;
+            const data: any = JSON.parse(response.body);
 
             hits += data.refineSearch.hits;
             totalHits = data.refineSearch.totalHits;

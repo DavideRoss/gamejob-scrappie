@@ -32,17 +32,20 @@ export class UbisoftScraper extends BaseScraper {
         let totalHits = 0;
 
         do {
-            const response = await got.post('https://avcvysejs1-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.8.4)%3B%20Browser%20(lite)%3B%20JS%20Helper%20(3.3.4)%3B%20react%20(16.12.0)%3B%20react-instantsearch%20(6.8.3)&x-algolia-api-key=1291fd5d5cd5a76a225fc6b00f7b296a&x-algolia-application-id=AVCVYSEJS1', {
+            const response = await got.post('https://avcvysejs1-3.algolianet.com/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.8.4)%3B%20Browser%20(lite)%3B%20JS%20Helper%20(3.3.4)%3B%20react%20(16.12.0)%3B%20react-instantsearch%20(6.8.3)&x-algolia-api-key=7d1048c332e18838e52ed9d41a50ac7b&x-algolia-application-id=AVCVYSEJS1', {
                 responseType: 'json',
-                json: {
+                body: JSON.stringify({
                     requests: [{
                         indexName: 'jobs_en-us_default',
-                        params: querystring.encode(query)
+                        params: new URLSearchParams(query).toString()
                     }]
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 }
             });
     
-            const data: any = response.body;
+            const data: any = JSON.parse(response.body);
     
             for (const offering of data.results[0].hits) {
                 const country = (offering.countryCode as string).toUpperCase();

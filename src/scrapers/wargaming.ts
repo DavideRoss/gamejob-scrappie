@@ -28,16 +28,11 @@ export class WargamingScraper extends BaseScraper {
         let totalHits = 0;
 
         do {
-            const response = await got('https://wargaming.com/en/api/careers/vacancy/', {
-                responseType: 'json',
-                searchParams: {
-                    offset: hits,
-                    limit: 50,
-                    department: 1373
-                }
+            const response = await got('https://wargaming.com/en/api/careers/vacancy/?offset=0&limit=50&department=1373', {
+                responseType: 'json'
             });
 
-            const data: any = response.body;
+            const data: any = JSON.parse(response.body);
 
             hits += data.results.length;
             totalHits = data.count;

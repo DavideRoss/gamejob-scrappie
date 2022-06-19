@@ -1,9 +1,11 @@
 import { BaseOperation } from "./base-operation";
 
-import { ScrapersSanityCheck } from "./scrapers-sanity-check";
+import { ScrapersSanityCheckOperation } from "./scrapers-sanity-check";
+import { SingleScrapeOperation } from "./single-scrape";
 
 const opsArray: BaseOperation[] = [
-    new ScrapersSanityCheck
+    new ScrapersSanityCheckOperation,
+    new SingleScrapeOperation
 ];
 
 const Operations = {};

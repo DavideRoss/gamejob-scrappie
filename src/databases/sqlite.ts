@@ -10,6 +10,13 @@ export class Sqlite extends BaseDatabase
 
     private _db: any;
 
+    constructor() {
+        super();
+
+        this.handle = 'sqlite',
+        this.name = 'SQLite'
+    }
+
     public async initialize(options?: any) {
         this._db = await open({
             filename: Sqlite.DB_NAME,

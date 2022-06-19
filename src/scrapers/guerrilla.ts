@@ -18,21 +18,21 @@ export class GuerrillaScraper extends BaseScraper {
         const response = await got('https://www.guerrilla-games.com/join');
         const $ = cheerio.load(response.body);
 
-        const items = $('.box-job__item');
+        const items = $('.card--job');
 
         items.each((i, e) => {
-            const title = $(e).find('.box-job__title').text().trim();
+            const title = $(e).find('.card__title').text().trim();
 
             // Skip open applications links
             if (title.toLowerCase() === 'open application') return;
 
-            const department = $(e).find('._title').text().trim();
+            const department = $(e).find('.card__meta').text().trim();
 
             // Filter by department
             if (['animation', 'art', 'character art', 'environment art', 'technical art', 'cinematics'].indexOf(department.toLowerCase()) == -1) return;
 
-            const link = $(e).find('.box-job__title__link').attr('href') || '';
-            const location = $(e).find('._meta-infos ._green').text().trim();
+            const link = 'https://www.guerrilla-games.com' + $(e).attr('href') || '';
+            const location = 'Amsterdam (NL)';
 
             jobs.push({
                 uuid: uuidv4(),

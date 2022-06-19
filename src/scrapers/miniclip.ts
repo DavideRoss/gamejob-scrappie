@@ -15,13 +15,16 @@ export class MiniclipScraper extends BaseScraper {
     public async scrape(): Promise<Job[]> {
         const jobs: Job[] = [];
 
-        const response = await got('https://corporate.miniclip.com/careers/vacancies/?department=Art');
-        const $ = cheerio.load(response.body);-
+        // FIXME: the department in the URL is ignored by the website
+        // The site filters the voices locally
+        // and parsing the department is too long to do now
+        const response = await got('https://corporate.miniclip.com/careers/vacancies?department=Art');
+        const $ = cheerio.load(response.body);
 
-        $('.vacancies-offer').each((i, e) => {
-            const title = $(e).find('a.vacancies-search-list-link').text().trim();
-            const location = $(e).find('.vacancies-search-list-column:eq(1)').text().trim();
-            const link = $(e).find('a.vacancies-search-list-link').attr('href') || '';
+        $('.mb-7').each((i, e) => {
+            const title = $(e).find('a.text-secondary').text().trim();
+            const location = $(e).find('span:eq(1)').text().trim();
+            const link = $(e).find('a.text-secondary').attr('href') || '';
 
             jobs.push({
                 uuid: uuidv4(),
@@ -30,7 +33,7 @@ export class MiniclipScraper extends BaseScraper {
                 link: `https://corporate.miniclip.com${link}`,
                 location,
                 house: 'Miniclip',
-                department: 'Art',
+                department: 'N.D.',
                 date: new Date()
             });
         });

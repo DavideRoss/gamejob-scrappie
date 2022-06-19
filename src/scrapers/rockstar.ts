@@ -19,7 +19,7 @@ export class RockstarScraper extends BaseScraper {
         });
 
         for (const deptKey of ['Art', 'Animation']) {
-            const data = response.body as any;
+            const data: any = JSON.parse(response.body);
             const deptJobs = this.getJobsFromDept(data.openings[deptKey].openings);
             jobs = [...jobs, ...deptJobs];
         }
