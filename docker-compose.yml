@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+    postgres:
+        image: "postgres:latest"
+        environment:
+            - POSTGRES_HOST_AUTH_METHOD=trust
+        ports:
+            - "5432:5432"
+
+    scrappie:
+        build: .
+        depends_on:
+            - postgres
+        ports:
+            - "7777:7777"
