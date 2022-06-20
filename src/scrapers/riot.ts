@@ -30,6 +30,7 @@ export class RiotScrape extends BaseScraper {
             jobs.push({
                 uuid: uuidv4(),
                 hash: createHash('md5').update(link, 'ascii').digest('hex'),
+                scraperHandle: this.handle,
                 title,
                 link: `https://www.riotgames.com${link}`,
                 location,

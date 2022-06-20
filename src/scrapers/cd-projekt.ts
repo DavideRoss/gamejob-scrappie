@@ -27,6 +27,7 @@ export class CDProjektScraper extends BaseScraper {
             jobs.push({
                 uuid: uuidv4(),
                 hash: createHash('md5').update($(e).html() || '', 'ascii').digest('hex'),
+                scraperHandle: this.handle,
                 title,
                 link,
                 location,

@@ -27,6 +27,7 @@ export class BungieScraper extends BaseScraper {
                 jobs.push({
                     uuid: uuidv4(),
                     hash: createHash('md5').update(offering.id.toString(), 'ascii').digest('hex'),
+                    scraperHandle: this.handle,
                     title: offering.title,
                     link: `https://careers.bungie.com/jobs/${offering.id}/${this.getLinkHandle(offering.title)}`,
                     location: offering.location,

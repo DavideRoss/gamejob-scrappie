@@ -2,6 +2,7 @@ import express from 'express';
 import basicAuth from 'express-basic-auth';
 
 import { Operations } from '../operations';
+import { Logger } from '../utils/logger';
 
 export class API {
     private app: express.Application;
@@ -28,6 +29,7 @@ export class API {
                 const opResult = await Operations[req.body.operation].run(req.body.options);
                 this.send(res, 'success', opResult);
             } catch (err) {
+                Logger.error('Operation error', err);
                 this.sendError(res, 'operation_error_thrown', err);
             }
         });
@@ -36,10 +38,8 @@ export class API {
     }
 
     public listen() {
-        // TODO: add proper logging
-
         this.app.listen(this.options?.port, () => {
-            console.log(`API listening on port ${this.options.port}`);
+            Logger.info(`API listening on port ${this.options.port}`);
         });
     }
 

@@ -29,6 +29,7 @@ export class GameloftScraper extends BaseScraper {
             jobs.push({
                 uuid: uuidv4(),
                 hash: createHash('md5').update(offering.apply_url, 'ascii').digest('hex'),
+                scraperHandle: this.handle,
                 title: offering.job_title,
                 link: offering.apply_url,
                 location: `${offering.city} (${offering.country})`,

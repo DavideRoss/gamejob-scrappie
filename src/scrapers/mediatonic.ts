@@ -22,6 +22,7 @@ export class MediatonicScraper extends BaseScraper {
             jobs.push({
                 uuid: uuidv4(),
                 hash: createHash('md5').update(raw.absolute_url, 'ascii').digest('hex'),
+                scraperHandle: this.handle,
                 title: raw.title,
                 link: raw.absolute_url,
                 location: raw.location.name,

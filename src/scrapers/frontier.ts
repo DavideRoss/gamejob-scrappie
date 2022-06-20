@@ -29,6 +29,7 @@ export class FrontierScraper extends BaseScraper {
             jobs.push({
                 uuid: uuidv4(),
                 hash: createHash('md5').update(link, 'ascii').digest('hex'),
+                scraperHandle: this.handle,
                 title,
                 department,
                 location,

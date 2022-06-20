@@ -43,6 +43,7 @@ export class WargamingScraper extends BaseScraper {
                 jobs.push({
                     uuid: uuidv4(),
                     hash: createHash('md5').update(offering.slug, 'ascii').digest('hex'),
+                    scraperHandle: this.handle,
                     title: offering.title,
                     house: 'Wargaming',
                     department: 'Art Production',

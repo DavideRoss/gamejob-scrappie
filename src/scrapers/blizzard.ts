@@ -62,6 +62,7 @@ export class BlizzardScraper extends BaseScraper {
                 jobs.push({
                     uuid: uuidv4(),
                     hash: createHash('md5').update(offering.jobSeqNo, 'ascii').digest('hex'),
+                    scraperHandle: this.handle,
                     title: offering.title,
                     house: 'Blizzard Entertainment',
                     department: offering.category,

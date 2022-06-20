@@ -23,9 +23,10 @@ export class Sqlite extends BaseDatabase
             driver: sqlite3.Database
         });
 
-        await this._db.run(`CREATE TABLE IF NOT EXISTS"jobs" (
+        await this._db.run(`CREATE TABLE IF NOT EXISTS "jobs" (
             "uuid" TEXT NOT NULL,
             "hash" TEXT NOT NULL,
+            "scraperHandle" TEXT NOT NULL,
             "title" TEXT,
             "department" TEXT,
             "location" TEXT,
@@ -41,11 +42,17 @@ export class Sqlite extends BaseDatabase
         return cnt.count > 0;
     }
 
+    public async getHashes(company: string): Promise<string[]> {
+        const hashes = await this._db.all(`SELECT hash FROM main.jobs WHERE scraperHandle = '${company}'`);
+        return hashes.map(e => e.hash);
+    }
+
     public async add(job: Job) {
         const query = `
             INSERT INTO main.jobs VALUES (
                 "${job.uuid}",
                 "${job.hash}",
+                "${job.scraperHandle}",
                 "${job.title}",
                 "${job.department}",
                 "${job.location}",
@@ -63,7 +70,7 @@ export class Sqlite extends BaseDatabase
         let query = 'INSERT INTO main.jobs VALUES ';
         const values: string[] = [];
 
-        for (const job of jobs) values.push(`("${job.uuid}", "${job.hash}", "${job.title}", "${job.department}", "${job.location}", "${job.link}", "${job.house}", "${job.date}")`);
+        for (const job of jobs) values.push(`("${job.uuid}", "${job.hash}", "${job.scraperHandle}", "${job.title}", "${job.department}", "${job.location}", "${job.link}", "${job.house}", "${job.date}")`);
         query += values.join(', ') + ';';
 
         try {

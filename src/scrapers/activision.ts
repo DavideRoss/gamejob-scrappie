@@ -60,6 +60,7 @@ export class ActivisionScraper extends BaseScraper {
                 jobs.push({
                     uuid: uuidv4(),
                     hash: createHash('md5').update(offering.jobId, 'ascii').digest('hex'),
+                    scraperHandle: this.handle,
                     title: offering.title,
                     house: 'Activision',
                     department: offering.category,

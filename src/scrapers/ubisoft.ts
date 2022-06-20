@@ -53,6 +53,7 @@ export class UbisoftScraper extends BaseScraper {
                 jobs.push({
                     uuid: uuidv4(),
                     hash: createHash('md5').update(offering.slug, 'ascii').digest('hex'),
+                    scraperHandle: this.handle,
                     title: offering.title,
                     house: 'Ubisoft',
                     department: offering.jobFamily,
