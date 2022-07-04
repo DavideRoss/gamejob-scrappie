@@ -1,6 +1,6 @@
 export abstract class BaseDatabase {
-    public name: string = '(no name)';
-    public handle: string = 'no_handle';
+    public name = '(no name)';
+    public handle = 'no_handle';
 
     public abstract initialize(options?: any);
 

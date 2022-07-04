@@ -4,13 +4,13 @@ import { WebClient } from "@slack/web-api";
 import * as _ from 'lodash';
 
 export class SlackReporter extends BaseReporter {
-    // TODO: move to options
-    private static BASE_URL: string = 'https://data.iamdavi.de/logos';
+    private client: WebClient;
+    private channel: string;
 
-    private _client: WebClient;
-    private _channel: string;
+    private logosUrl: string;
+    private chunkSize: number;
 
-    private _emojis: Map<LogLevel, string> = new Map<LogLevel, string>([
+    private emojis: Map<LogLevel, string> = new Map<LogLevel, string>([
         [LogLevel.Info, ':white_check_mark:'],
         [LogLevel.Warning, ':warning:'],
         [LogLevel.Error, ':x:']
@@ -22,13 +22,16 @@ export class SlackReporter extends BaseReporter {
     }
 
     public initialize(options?: any) {
-        this._client = new WebClient(process.env.SLACK_TOKEN);
-        this._channel = process.env.ENVIRONMENT === 'production' ? '#jobs' : '#jobs-dev'
+        this.client = new WebClient(process.env.SLACK_TOKEN);
+        this.channel = process.env.ENVIRONMENT === 'production' ? '#jobs' : '#jobs-dev';
+
+        this.logosUrl = options.logosUrl;
+        this.chunkSize = options.chunkSize;
     }
     
     public async sendJob(scraperHandle: string, job: Job) {
-        await this._client.chat.postMessage({
-            channel: this._channel,
+        await this.client.chat.postMessage({
+            channel: this.channel,
             text: `${job.house} - ${job.title}`,
             blocks: [{
                 type: 'header',
@@ -56,7 +59,7 @@ export class SlackReporter extends BaseReporter {
                 }],
                 accessory: {
                     type: 'image',
-                    image_url: `${SlackReporter.BASE_URL}/${scraperHandle}.png`,
+                    image_url: `${this.logosUrl}/${scraperHandle}.png`,
                     alt_text: scraperHandle
                 }
             }, {
@@ -75,10 +78,9 @@ export class SlackReporter extends BaseReporter {
     }
     
     public async sendBulkJobs(scraperHandle: string, jobs: Job[]) {
-        // TODO: get chunk size from settings
-        for (const chunk of _.chunk(jobs, 20)) {
+        for (const chunk of _.chunk(jobs, this.chunkSize)) {
             const payload = {
-                channel: this._channel,
+                channel: this.channel,
                 text: `${chunk[0].house} - Multiple positions!`,
                 blocks: [{
                     type: 'header',
@@ -94,7 +96,7 @@ export class SlackReporter extends BaseReporter {
                     },
                     accessory: {
                         type: 'image',
-                        image_url: `${SlackReporter.BASE_URL}/${scraperHandle}.png`,
+                        image_url: `${this.logosUrl}/${scraperHandle}.png`,
                         alt_text: scraperHandle
                     }
                 }]
@@ -117,7 +119,7 @@ export class SlackReporter extends BaseReporter {
                 } as any);
             }
     
-            await this._client.chat.postMessage(payload);
+            await this.client.chat.postMessage(payload);
         }
     }
 
@@ -131,7 +133,7 @@ export class SlackReporter extends BaseReporter {
                 type: 'header',
                 text: {
                     type: 'plain_text',
-                    text: `${this._emojis.get(level)} ${title}`
+                    text: `${this.emojis.get(level)} ${title}`
                 }
             }]
         };
@@ -146,6 +148,6 @@ export class SlackReporter extends BaseReporter {
             });
         }
 
-        await this._client.chat.postMessage(payload);
+        await this.client.chat.postMessage(payload);
     }
 }

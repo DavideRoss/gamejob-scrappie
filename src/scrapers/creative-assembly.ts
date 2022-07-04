@@ -15,7 +15,6 @@ export class CreativeAssemblyScraper extends BaseScraper {
     public async scrape(): Promise<Job[]> {
         const jobs: Job[] = [];
 
-        // TODO: fix headers?
         const response = await got.post('https://www.creative-assembly.com/views/ajax?_wrapper_format=drupal_ajax', {
             responseType: 'json',
             insecureHTTPParser: true,
@@ -25,7 +24,7 @@ export class CreativeAssemblyScraper extends BaseScraper {
                 'cache-control': 'no-cache',
                 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 pragma: 'no-cache',
-                'sec-ch-ua': '\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"',
+                'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
                 'sec-ch-ua-mobile': '?0',
                 'sec-fetch-dest': 'empty',
                 'sec-fetch-mode': 'cors',

@@ -1,18 +1,14 @@
 import { BaseReporter, LogLevel } from "./base-reporter";
 
-import { Client, EmbedField, Intents, MessageEmbed, MessageOptions, TextChannel } from 'discord.js';
+import { Client, Intents, MessageOptions, TextChannel } from 'discord.js';
 import { MessageComponentTypes } from "discord.js/typings/enums";
 
-import * as _ from 'lodash';
-
-
 export class DiscordReporter extends BaseReporter {
-    // TODO: move to options
-    private static BASE_URL: string = 'https://data.iamdavi.de/logos';
+    private client: Client;
+    private mainChannel: TextChannel;
+    private logChannel: TextChannel;
 
-    private _client: Client;
-    private _mainChannel: TextChannel;
-    private _logChannel: TextChannel;
+    private logosUrl: string;
     
     private _emojis: Map<LogLevel, string> = new Map<LogLevel, string>([
         [LogLevel.Info, ':white_check_mark:'],
@@ -32,19 +28,21 @@ export class DiscordReporter extends BaseReporter {
     }
 
     public async initialize(options?: any) {
-        this._client = new Client({
+        this.logosUrl = options.logosUrl;
+
+        this.client = new Client({
             intents: [Intents.FLAGS.GUILDS]
         });
 
         return new Promise<void>((resolve, reject) => {
-            this._client.login();
-            this._client.once('error', reject);
+            this.client.login();
+            this.client.once('error', reject);
 
-            this._client.once('ready', () => {
-                this._client.off('error', reject);
+            this.client.once('ready', () => {
+                this.client.off('error', reject);
 
-                this._mainChannel = this._client.channels.cache.find(v => (v as TextChannel).name === options.mainChannel) as TextChannel;
-                this._logChannel = this._client.channels.cache.find(v => (v as TextChannel).name === options.logChannel) as TextChannel;
+                this.mainChannel = this.client.channels.cache.find(v => (v as TextChannel).name === options.mainChannel) as TextChannel;
+                this.logChannel = this.client.channels.cache.find(v => (v as TextChannel).name === options.logChannel) as TextChannel;
 
                 resolve()
             });
@@ -77,13 +75,13 @@ export class DiscordReporter extends BaseReporter {
                     name: 'Location', value: job.location || '(no data)'
                 }],
                 thumbnail: {
-                    url:  `${DiscordReporter.BASE_URL}/${scraperHandle}.png`,
+                    url:  `${this.logosUrl}/${scraperHandle}.png`,
                 },
                 timestamp: job.date.toISOString()
             }]
         };
 
-        await this._mainChannel.send(msg);
+        await this.mainChannel.send(msg);
     }
 
     public async sendBulkJobs(scraperHandle: string, jobs: Job[]) {
@@ -92,7 +90,7 @@ export class DiscordReporter extends BaseReporter {
             embeds: [{
                 title: `**${jobs[0].house} - Multiple positions!**`,
                 thumbnail: {
-                    url:  `${DiscordReporter.BASE_URL}/${scraperHandle}.png`,
+                    url:  `${this.logosUrl}/${scraperHandle}.png`,
                 },
                 timestamp: jobs[0].date.toISOString(),
                 fields: jobs.map((job: Job) => ({
@@ -101,7 +99,7 @@ export class DiscordReporter extends BaseReporter {
             }]
         };
         
-        await this._mainChannel.send(msg);        
+        await this.mainChannel.send(msg);        
     }
 
     public async sendLog(level: LogLevel, title: string, data?: string | undefined) {
@@ -117,6 +115,6 @@ export class DiscordReporter extends BaseReporter {
             }]
         };
 
-        await this._logChannel.send(msg);
+        await this.logChannel.send(msg);
     }
 }

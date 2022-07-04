@@ -1,7 +1,6 @@
 import got from 'got';
 import { v4 as uuidv4 } from 'uuid';
 import { createHash } from 'crypto';
-import * as querystring from 'querystring';
 
 import { BaseScraper } from './base-scraper';
 

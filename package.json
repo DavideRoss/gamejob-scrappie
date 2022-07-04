@@ -8,6 +8,7 @@
     "start:dev": "tsc && node dist/app.js --dev",
     "dev": "nodemon --config nodemon.json src/app.ts",
     "build": "tsc",
+    "lint": "npx eslint .",
     "docker:build": "docker build -t gamejob-scrappie .",
     "docker:start": "docker run -it -p 7777:7777 gamejob-scrappie",
     "docker:postgres": "docker run -d -p 0.0.0.0:5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres",
@@ -21,8 +22,10 @@
     "@types/pg": "^8.6.5",
     "@types/sqlite3": "^3.1.8",
     "@types/winston": "^2.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.19.0",
     "nodemon": "^2.0.16",
-    "tslint": "^6.1.3",
     "typescript": "^4.6.4"
   },
   "dependencies": {

@@ -1,8 +1,10 @@
+import path from 'path';
 import express from 'express';
 import basicAuth from 'express-basic-auth';
 
 import { Operations } from '../operations';
 import { Logger } from '../utils/logger';
+import { Options } from '../utils/options';
 
 export class API {
     private app: express.Application;
@@ -15,6 +17,11 @@ export class API {
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+
+        const logosOptions = Options['logos'];
+        if (logosOptions.enabled) {
+            this.app.use(logosOptions.webRoot, express.static(path.join(__dirname, logosOptions.relativePath)))
+        }
         
         this.app.use(basicAuth({
             users: { [options.username]: options.password }
@@ -33,8 +40,6 @@ export class API {
                 this.sendError(res, 'operation_error_thrown', err);
             }
         });
-
-        // TODO: add static logo path
     }
 
     public listen() {
@@ -43,12 +48,12 @@ export class API {
         });
     }
 
-    private send(res, status: string, data: any = null, statusCode: number = 200) {
+    private send(res, status: string, data = null, statusCode = 200) {
         res.status(statusCode);
         res.send({ status, data });
     }
 
-    private sendError(res, error: string, data: any = null, statusCode: number = 400) {
+    private sendError(res, error: string, data: null|unknown = null, statusCode = 400) {
         res.status(statusCode);
         res.send({
             status: 'error',

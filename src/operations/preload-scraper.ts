@@ -14,7 +14,9 @@ export class PreloadScraperOperation extends BaseOperation {
     }
 
     public async run(options?: any) {
-        const output: any = {};
+        const output: any = {
+            data: []
+        };
 
         const db: BaseDatabase = databases[options.db];
         const selScrapers: BaseScraper[] = scrapers.filter(e => options.scrapers.includes(e.handle));
@@ -24,7 +26,7 @@ export class PreloadScraperOperation extends BaseOperation {
                 const jobs = await scraper.scrape();
     
                 output.result = 'ok';
-                output.data = jobs;
+                output.data.push(...jobs);
                 db.addRange(jobs);
             } catch (err) {
                 Logger.error('Error running single scrape operation', err);

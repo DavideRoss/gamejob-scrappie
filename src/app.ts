@@ -14,15 +14,6 @@ let reporter: BaseReporter;
 
 const banList = {};
 
-// TODO: add express api for image hosting
-
-// TODO: add telegram reporter
-// TODO: add postgres db
-
-// TODO: implement postings cleanup operation
-
-// TODO: activision and riot hashing not really working well
-
 const scrape = async () => {
     for (const scraper of scrapers) {
         Logger.info(`Processing scraper "${scraper.handle}"`);
@@ -46,8 +37,7 @@ const scrape = async () => {
                 if (!hashes.includes(job.hash)) reports.push(job);
             }
 
-            // TODO: move to settings
-            if (reports.length >= 10) {
+            if (reports.length >= options['scrapers'].bulkThreshold) {
                 reporter.sendBulkJobs(scraper.handle, reports);
             } else {
                 for (const job of reports) reporter.sendJob(scraper.handle, job);
@@ -60,6 +50,7 @@ const scrape = async () => {
     }
 
     Logger.info('Cycle done!');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setTimeout(scrape, options['basic'].interval);
 };
 
@@ -84,5 +75,6 @@ const scrape = async () => {
     api.listen();
 
     Logger.info('Gamejob Scrappie ready!');
+    // TODO: enable
     // scrape();
 })();

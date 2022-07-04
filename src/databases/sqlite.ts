@@ -5,10 +5,7 @@ import { open } from 'sqlite';
 
 export class Sqlite extends BaseDatabase
 {
-    // TODO: add this to options
-    private static DB_NAME: string = 'jobs.sqlite';
-
-    private _db: any;
+    private db: any;
 
     constructor() {
         super();
@@ -18,12 +15,12 @@ export class Sqlite extends BaseDatabase
     }
 
     public async initialize(options?: any) {
-        this._db = await open({
-            filename: Sqlite.DB_NAME,
+        this.db = await open({
+            filename: options.filename,
             driver: sqlite3.Database
         });
 
-        await this._db.run(`CREATE TABLE IF NOT EXISTS "jobs" (
+        await this.db.run(`CREATE TABLE IF NOT EXISTS "jobs" (
             "uuid" TEXT NOT NULL,
             "hash" TEXT NOT NULL,
             "scraperHandle" TEXT NOT NULL,
@@ -38,12 +35,12 @@ export class Sqlite extends BaseDatabase
     }
 
     public async findHash(hash: string): Promise<boolean> {
-        const cnt = await this._db.get(`SELECT COUNT(*) AS count FROM main.jobs WHERE hash = '${hash}'`);
+        const cnt = await this.db.get(`SELECT COUNT(*) AS count FROM main.jobs WHERE hash = '${hash}'`);
         return cnt.count > 0;
     }
 
     public async getHashes(company: string): Promise<string[]> {
-        const hashes = await this._db.all(`SELECT hash FROM main.jobs WHERE scraperHandle = '${company}'`);
+        const hashes = await this.db.all(`SELECT hash FROM main.jobs WHERE scraperHandle = '${company}'`);
         return hashes.map(e => e.hash);
     }
 
@@ -62,7 +59,7 @@ export class Sqlite extends BaseDatabase
             );
         `;
 
-        await this._db.run(query);
+        await this.db.run(query);
     }
 
     public async addRange(jobs: Job[]) {
@@ -74,7 +71,7 @@ export class Sqlite extends BaseDatabase
         query += values.join(', ') + ';';
 
         try {
-            await this._db.run(query);
+            await this.db.run(query);
         } catch (e) {
             throw new DatabaseError('SQLite3 database error', {
                 error: e,

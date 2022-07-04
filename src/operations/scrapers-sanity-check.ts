@@ -2,15 +2,13 @@ import { BaseOperation } from "./base-operation";
 
 import { scrapers } from '../scrapers';
 
-// TODO: add logging
-
 export class ScrapersSanityCheckOperation extends BaseOperation {
     constructor() {
         super();
         this.handle = 'scrapers-sanity-check';
     }
 
-    public async run(options?: any) {
+    public async run() {
         const output = {};
 
         for (const scraper of scrapers) {

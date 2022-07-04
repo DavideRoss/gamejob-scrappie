@@ -22,7 +22,7 @@ export class WargamingScraper extends BaseScraper {
             }
         });
 
-        const offices = officeResponse.body as any[];
+        const offices = JSON.parse(officeResponse.body);
 
         let hits = 0;
         let totalHits = 0;
