@@ -3,7 +3,7 @@
     "ignore": [".git", "node_modules/", "dist/", "coverage/"],
     "watch": ["src/"],
     "execMap": {
-      "ts": "npm run start:dev"
+      "ts": "npm run dev"
     },
     "env": {
       "NODE_ENV": "development"

@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 
 export class SlackReporter extends BaseReporter {
     private client: WebClient;
-    private channel: string;
+    private mainChannel: string;
+    private logChannel: string;
 
     private logosUrl: string;
     private chunkSize: number;
@@ -23,7 +24,8 @@ export class SlackReporter extends BaseReporter {
 
     public initialize(options?: any) {
         this.client = new WebClient(process.env.SLACK_TOKEN);
-        this.channel = process.env.ENVIRONMENT === 'production' ? '#jobs' : '#jobs-dev';
+        this.mainChannel = process.env.ENVIRONMENT === 'production' ? options.mainChannel : '#jobs-dev';
+        this.logChannel = options.logChannel;
 
         this.logosUrl = options.logosUrl;
         this.chunkSize = options.chunkSize;
@@ -31,7 +33,7 @@ export class SlackReporter extends BaseReporter {
     
     public async sendJob(scraperHandle: string, job: Job) {
         await this.client.chat.postMessage({
-            channel: this.channel,
+            channel: this.mainChannel,
             text: `${job.house} - ${job.title}`,
             blocks: [{
                 type: 'header',
@@ -80,7 +82,7 @@ export class SlackReporter extends BaseReporter {
     public async sendBulkJobs(scraperHandle: string, jobs: Job[]) {
         for (const chunk of _.chunk(jobs, this.chunkSize)) {
             const payload = {
-                channel: this.channel,
+                channel: this.mainChannel,
                 text: `${chunk[0].house} - Multiple positions!`,
                 blocks: [{
                     type: 'header',
