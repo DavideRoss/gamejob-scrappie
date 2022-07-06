@@ -75,6 +75,5 @@ const scrape = async () => {
     api.listen();
 
     Logger.info('Gamejob Scrappie ready!');
-    // TODO: enable
-    // scrape();
+    scrape();
 })();
